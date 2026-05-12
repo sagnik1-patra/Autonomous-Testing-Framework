@@ -1,5 +1,12 @@
-const { runSteps } = require('passmark');
+const { runSteps, configure } = require('passmark');
 const config = require('./config');
+
+// Configure Passmark to route requests through OpenRouter
+configure({
+  ai: {
+    gateway: "openrouter"
+  }
+});
 
 /**
  * Wrapper for passmark runSteps to easily execute AI flows.
@@ -9,9 +16,11 @@ async function executeFlow({ page, test, expect, flowName, steps, assertions = [
     console.warn('WARNING: OPENROUTER_API_KEY is not set. Passmark will fail if it relies on it.');
   }
 
-  // Passmark requires setting the OPENAI_API_KEY and OPENAI_BASE_URL to work with OpenRouter
+  // Passmark configuration is now handled via configure() above
+  // Using the API key from environment variables (handled by Passmark internally when gateway is openrouter)
+  // Or we can manually set OPENAI_API_KEY if needed, but configure({ ai: { gateway: 'openrouter' } }) 
+  // is the preferred method as requested.
   process.env.OPENAI_API_KEY = config.openRouterApiKey;
-  process.env.OPENAI_BASE_URL = 'https://openrouter.ai/api/v1';
 
   return await runSteps({
     page,
