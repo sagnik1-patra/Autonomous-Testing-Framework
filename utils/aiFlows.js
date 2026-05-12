@@ -16,12 +16,6 @@ async function executeFlow({ page, test, expect, flowName, steps, assertions = [
     console.warn('WARNING: OPENROUTER_API_KEY is not set. Passmark will fail if it relies on it.');
   }
 
-  // Passmark configuration is now handled via configure() above
-  // Using the API key from environment variables (handled by Passmark internally when gateway is openrouter)
-  // Or we can manually set OPENAI_API_KEY if needed, but configure({ ai: { gateway: 'openrouter' } }) 
-  // is the preferred method as requested.
-  process.env.OPENAI_API_KEY = config.openRouterApiKey;
-
   return await runSteps({
     page,
     userFlow: flowName,
